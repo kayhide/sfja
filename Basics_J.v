@@ -38,7 +38,12 @@ Definition next_weekday (d:day) : day :=
 (** 関数の定義ができたら、いくつかの例を挙げてそれが正しいものであることをチェックしなければなりません。それを実現するために、Coqには三つの方法が用意されています。一つ目は「[Eval Simpl]」コマンドを使って、関数[next_weekday]を含んだ式を評価させることです。次のコマンドをよく見て、何をしているかを考えてみてください。 *)
 
 Eval simpl in (next_weekday friday).
+     (* = monday *)
+     (* : day *)
+
 Eval simpl in (next_weekday (next_weekday saturday)).
+     (* = tuesday *)
+     (* : day *)
 
 (** もし今手元にコンピュータがあるなら、CoqのIDEのうち好きなもの（CoqIDEやProofGeneralなどから）を選んで起動し、実際に上のコマンドを入力し動かしてみるといいでしょう。付録の「[Basic.v]」ファイルから上のサンプルを探してCoqに読み込ませ、結果を観察してください。 *)
 
@@ -115,32 +120,35 @@ Definition admit {T: Type} : T.  Admitted.
 (** この関数はどちらか、もしくは両方が[false]になったときに[true]を返すものである。 *)
 
 Definition nandb (b1:bool) (b2:bool) : bool :=
-  (* FILL IN HERE *) admit.
+  negb (andb b1 b2).
 
 (** 下の定義から[Admitted.]を取り去り、代わりに"[Proof. simpl. reflexivity. Qed.]"で検証できるようなコードを記述しなさい。 *)
 
 Example test_nandb1:               (nandb true false) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb2:               (nandb false false) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb3:               (nandb false true) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb4:               (nandb true true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** **** 練習問題: ★ (andb3) *)
 Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool :=
-  (* ここを埋めなさい *) admit.
+  match b1 with
+    | true => andb b2 b3
+    | false => false
+  end.
 
 Example test_andb31:                 (andb3 true true true) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb32:                 (andb3 false true true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb33:                 (andb3 true false true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb34:                 (andb3 true true false) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 
@@ -149,12 +157,14 @@ Example test_andb34:                 (andb3 true true false) = false.
 (** [Check]コマンドを使うと、Coqに、指定した式の型を表示させることができます。例えば、（[negb true]）という式の全体の型は[bool]である、という具合です。 *)
 
 Check (negb true).
-(* ===> negb true : bool *)
+(* negb true *)
+(*      : bool *)
 
 (** [negb]のような関数は、それ自身が[true]や[false]と同じように値であると考えることもできます。そのようにとらえた場合の値の型を「関数型」と呼び、以下のように矢印を使った型として表します。 *)
 
 Check negb.
-(* ===> negb : bool -> bool *)
+(* negb *)
+(*      : bool -> bool *)
 
 (** [negb]の型は[bool->bool]と書き、「[bool]から[bool]」と読み、[bool]型の引数をとって[bool]型の戻り値を返す関数と理解することができます。同様に、[andb]の型は[bool -> bool -> bool]と書き、「二つの[bool]型の値を引数として[bool]型の値を作成して戻す」と解釈します。 *)
 
@@ -208,13 +218,23 @@ Definition minustwo (n : nat) : nat :=
 (** 自然数というのは非常に一般的な型なので、Coqは自然数を扱ったり表したりするときに若干特別な扱いをします。[S]や[O]を使った式の代わりに一般的に使われるアラビア数字を使うことができます。実際、Coqは数値を表示する際、デフォルトではアラビア数字を用います。 *)
 
 Check (S (S (S (S O)))).
+(* 4 *)
+(*      : nat *)
 Eval simpl in (minustwo 4).
+     (* = 2 *)
+     (* : nat *)
 
 (** [nat]のコンストラクタ[S]は、[nat -> nat]型の関数で[minustwo]や[pred]も同様です。 *)
 
 Check S.
+(* S *)
+(*      : nat -> nat *)
 Check pred.
+(* Nat.pred *)
+(*      : nat -> nat *)
 Check minustwo.
+(* minustwo *)
+(*      : nat -> nat *)
 
 (** これらが表しているのは、いずれの関数も数を引数にとって数を生成できる、ということです。しかしながらこれらの関数には根本的な違いがあります。[pred]や[minustwo]といった関数には「計算ルール」というものが定義されています。[pred]の定義は、[pred n]が[match n with | O => O | S m' => m' end]のように簡約されることを記述したものですが、一方[S]にはそのような定義がありません。しかし両方とも関数には違いなく、引数を元に評価されるということについては同じで、それ以上のものではないのです。 *)
 
@@ -300,12 +320,15 @@ Proof. simpl. reflexivity.  Qed.
     これをCoqでの定義に書き直しなさい。 *)
 
 Fixpoint factorial (n:nat) : nat :=
-  (* FILL IN HERE *) admit.
+  match n with
+  | O => S O
+  | S n' => mult n (factorial n')
+  end.
 
 Example test_factorial1:          (factorial 3) = 6.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 Example test_factorial2:          (factorial 5) = (mult 10 12).
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 (** [] *)
 
 (** ここで紹介する"notation"（表記法）という機能を使うことで、加算、減算、乗算のような数値を扱う式をずっと読みやすく、書きやすくすることができます。 *)
@@ -315,6 +338,8 @@ Notation "x - y" := (minus x y)  (at level 50, left associativity) : nat_scope.
 Notation "x * y" := (mult x y)  (at level 40, left associativity) : nat_scope.
 
 Check ((0 + 1) + 1).
+(* 0 + 1 + 1 *)
+(*      : nat *)
 
 (** これらは、これまで我々が定義してきたものを何ら変えるわけではありません。NotationはCoqのパーサに対して[x + y]を[plus x y]と解釈させたり、逆に[plus x y]を[x + y]と表記させたりするためのものです。
 
@@ -362,14 +387,14 @@ Proof. simpl. reflexivity.  Qed.
 注：[simpl]タクティックを使ってうまくいかない場合は、代わりに[compute]を試してください。それはよりうまく作られた[simpl]と言えるものですが、そもそもシンプルでエレガントな解が書けていれば、[simpl]で十分に評価できるはずです。 *)
 
 Definition blt_nat (n m : nat) : bool :=
-  (* FILL IN HERE *) admit.
+  negb (ble_nat m n).
 
 Example test_blt_nat1:             (blt_nat 2 2) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 Example test_blt_nat2:             (blt_nat 2 4) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 Example test_blt_nat3:             (blt_nat 4 2) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 (** [] *)
 
 
@@ -400,10 +425,14 @@ Proof.
 (** この問い合わせの結果、Coqが返す応答はなにか？ *)
 
 Eval simpl in (forall n:nat, n + 0 = n).
+     (* = forall n : nat, n + 0 = n *)
+     (* : Prop *)
 
 (** また次のものの場合はどうか？ *)
 
 Eval simpl in (forall n:nat, 0 + n = n).
+     (* = forall n : nat, n = n *)
+     (* : Prop *)
 
 (** この二つの違いを示せ。  [] *)
 
@@ -461,7 +490,12 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m o.
+  intros Hn Hm.
+  rewrite -> Hn.
+  rewrite -> Hm.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** Admittedコマンドは、Coqに対して「この証明はあきらめたので、この定理はこれでいいことにしてください」と指示するものです。この機能は、より長い証明をする際に便利です。何か大きな論証をしようとする時、今のところ信用している補足的な命題を示したい時があります。そんな時、[Admitted]を使用すると、その命題を一時的に信用できることにして、それを踏み台にしてより大きな論証を進めることができるのです。そしてそれが完成したのち、あらためて保留していた命題の証明を埋めればいいのです。ただし注意して下さい。[admit]や[Admitted]を使用することは、一時的にドアを開けて、「全て形式的なチェックを受け証明済みの、信用するに足るCoqの世界」から、信用に値しない下界へ足を踏み出していることに他なりません。いつかは戻ってドアを閉めることがお約束です。*)
@@ -479,7 +513,11 @@ Proof.
 Theorem mult_1_plus : forall n m : nat,
   (1 + n) * m = m + (n * m).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m.
+  rewrite -> plus_1_l.
+  simpl.
+  reflexivity.
+  Qed.
 (** [] *)
 
 
@@ -525,7 +563,11 @@ Proof.
 Theorem zero_nbeq_plus_1 : forall n : nat,
   beq_nat 0 (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  destruct n as [|n'].
+  reflexivity.
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -584,7 +626,16 @@ Proof.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c H.
+  destruct c.
+  Case "c = true".
+  reflexivity.
+  Case "c = false".
+  rewrite <- H.
+  destruct b.
+  simpl. reflexivity.
+  simpl. reflexivity.
+Qed.
 (** [] *)
 
 (** Coq上に証明の経過を記述する際、それをどのようにフォーマットするべきか、ということについてちゃんとしたルールというものはありません。行が分割され、証明の各段階が階層を持ち、それをインデントで表現するような場合は特にそうです。しかしながら、複数のサブゴールが作成された部分が明示的に[Case]タクティックでマークされた場合は、それを行頭から記述することにします。そうしておけば、証明は読みやすくなり、それ以外でどんな方針のレイアウトが選ばれても、あまり問題になりません。
@@ -651,17 +702,35 @@ Proof.
 Theorem mult_0_r : forall n:nat,
   n * 0 = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  Case "n = 0".
+  simpl. reflexivity.
+  Case "n = S n'".
+  simpl. rewrite -> IHn. reflexivity.
+Qed.
 
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m.
+  induction n.
+  reflexivity.
+  simpl. rewrite -> IHn. reflexivity.
+Qed.
 
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m.
+  induction n.
+  rewrite -> plus_0_r.
+  reflexivity.
+  simpl.
+  rewrite -> IHn.
+  rewrite -> plus_n_Sm.
+  reflexivity.
+Qed.
 (** [] *)
 
 Fixpoint double (n:nat) :=
@@ -673,7 +742,14 @@ Fixpoint double (n:nat) :=
 (** **** 練習問題: ★★ (double_plus) *)
 Lemma double_plus : forall n, double n = n + n .
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  reflexivity.
+  simpl.
+  rewrite -> IHn.
+  rewrite -> plus_n_Sm.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★ (destruct_induction) *)
@@ -766,7 +842,13 @@ Proof.
 Theorem beq_nat_refl : forall n : nat,
   true = beq_nat n n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  reflexivity.
+  simpl.
+  rewrite -> IHn.
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -817,15 +899,68 @@ Proof.
 Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  rewrite plus_assoc.
+  rewrite plus_assoc.
+  assert (H: n + m = m + n).
+    Case "Proof of assertion".
+    rewrite -> plus_comm. reflexivity.
+  rewrite -> H.
+  reflexivity.
+Qed.
 
 
 (** では、乗法が可換であることを証明しましょう。おそらく、補助的な定理を定義し、それを使って全体を証明することになると思います。先ほど証明した[plus_swap]が便利に使えるでしょう。 *)
 
+Lemma mult_r : forall m n : nat, m * S n = m + m * n.
+Proof.
+  intros m n.
+  induction m, n. 
+  simpl.
+  reflexivity.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHm.
+  reflexivity.
+  simpl.
+  rewrite IHm.
+  assert (H : m + S (n + m * S n) = S (n + m * S n) + m).
+    rewrite plus_comm. reflexivity.
+  rewrite H.
+  simpl.
+  assert (H' : m + m * S n = m * S n + m).
+    rewrite plus_comm. reflexivity.
+  rewrite H'.
+  rewrite plus_assoc.
+  reflexivity.
+Qed.
+
 Theorem mult_comm : forall m n : nat,
  m * n = n * m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros m n.
+  assert (H : forall n' : nat, n' * 0 = 0).
+    induction n'.
+    reflexivity.
+    simpl.
+    apply IHn'.
+
+  induction m, n.
+  reflexivity.
+  simpl.
+  rewrite H.
+  reflexivity.
+  simpl.
+  rewrite H.
+  reflexivity.
+  simpl.
+  rewrite IHm.
+  simpl.
+  rewrite mult_r.
+  rewrite plus_swap.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★, optional (evenb_n__oddb_Sn) *)
