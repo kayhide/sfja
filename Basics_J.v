@@ -1133,7 +1133,52 @@ Qed.
     (c) 最後にbで作成したインクリメント関数と、2進→自然数関数が可換であることを証明しなさい。これを証明するには、bin値をまずインクリメントしたものを自然数に変換したものが、先に自然数変換した後にインクリメントした元の値と等しいことを証明すればよい。
 *)
 
-(* FILL IN HERE *)
+Inductive bin : Type :=
+| BO : bin
+| BD : bin -> bin
+| BS : bin -> bin
+.
+
+
+Fixpoint bin_inc (b : bin) : bin :=
+  match b with
+    | BO => BS BO
+    | BD b' => BS b'
+    | BS b' => BD (bin_inc b')
+  end.
+
+Compute (bin_inc (BS (BS (BS BO)))).
+     (* = BD (BD (BD (BS BO))) *)
+     (* : bin *)
+
+Fixpoint bin_to_nat (b : bin) : nat :=
+  match b with
+    | BO => O
+    | BD b' => mult 2 (bin_to_nat b')
+    | BS b' => S (mult 2 (bin_to_nat b'))
+  end.
+  
+Compute (bin_to_nat (BS (BS (BS BO)))).
+     (* = 7 *)
+     (* : nat *)
+
+Theorem bin_inc__bin_to_nat_comm : forall b : bin,
+    bin_to_nat (bin_inc b) = S (bin_to_nat b).
+Proof.
+  intros b.
+  induction b.
+  simpl.
+  reflexivity.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHb.
+  simpl.
+  rewrite plus_0_r.
+  rewrite plus_comm.
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★★★ (binary_inverse) *)
