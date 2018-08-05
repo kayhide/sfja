@@ -1194,7 +1194,64 @@ Qed.
     (c) 2進数を引数として取り、それを一度自然数に変換した後、また2進数に変換したものを返すnormalize関数を作成し、証明しなさい。
 *)
 
-(* FILL IN HERE *)
+Fixpoint nat_to_bin (n : nat) : bin :=
+  match n with
+  | O => BO
+  | S n' => bin_inc (nat_to_bin n')
+  end.
+
+Theorem nat_to_bin_to_nat_idem : forall n : nat,
+    bin_to_nat (nat_to_bin n) = n.
+Proof.
+  intros n.
+  induction n.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite bin_inc__bin_to_nat_comm.
+  rewrite IHn.
+  reflexivity.
+Qed.
+
+(*
+(b) BD BO と BO は nat にコンバートするとともに O になる。
+したがって BO 、 BD BO のどちらかは元の値に一致する変換を実現できない。
+
+同様に BD (BD BO) 、 BD (BD (BD BO)) 、 (BD (... (BD BO) ) も自然数に変換すると 0 になる。
+0b1 = 0b01 = 0b001 = 0b0...1
+ *)
+
+Compute (bin_to_nat BO).
+     (*  = 0 *)
+     (* : nat *)
+ 
+Compute (bin_to_nat (BD BO)).
+     (* = 0 *)
+     (* : nat *)
+
+Definition bin_normalize (b : bin) : bin :=
+  nat_to_bin (bin_to_nat b).
+
+Example test_bin_normalize1: bin_normalize (BD BO) = BO.
+Proof. simpl. reflexivity. Qed.
+
+Example test_bin_normalize2: bin_normalize (BD (BD BO)) = BO.
+Proof. simpl. reflexivity. Qed.
+
+
+Theorem bin_normalize_idem : forall b : bin,
+    bin_normalize b = bin_normalize (bin_normalize b).
+Proof.
+  intros b.
+  replace (bin_normalize (bin_normalize b)) with (nat_to_bin (bin_to_nat (bin_normalize b))).
+  replace (bin_normalize b) with (nat_to_bin (bin_to_nat b)).
+  rewrite nat_to_bin_to_nat_idem.
+  reflexivity.
+  compute.
+  reflexivity.
+  compute.
+  reflexivity.
+Qed.
 
 
 (** **** 練習問題: ★★, optional (decreasing) *)
