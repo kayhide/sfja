@@ -554,7 +554,24 @@ Qed.
 
 (** [] *)
 
-(** FILL IN HERE *)
+Theorem count_add_plus_one: forall n : nat, forall s : bag,
+      count n (add n s) = 1 + count n s.
+Proof.
+  intros n s.
+  simpl.
+  rewrite <- beq_nat_refl.
+  reflexivity.
+Qed.
+
+Theorem count_add_id: forall n m : nat, forall s : bag,
+      beq_nat m n = false -> count n (add m s) = count n s.
+Proof.
+  intros n m s.
+  intros H.
+  simpl.
+  rewrite H.
+  reflexivity.
+Qed.
 (** [] *)
 
 
