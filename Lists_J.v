@@ -530,7 +530,29 @@ Proof. reflexivity. Qed.
  *)
 (**
    [count] や [add] を使ったバッグに関する面白い定理を書き、それを証明しなさい。この問題はいわゆる自由課題で、真になることがわかっていても、証明にはまだ習っていない技を使わなければならない定理を思いついてしまうこともあります。証明に行き詰まってしまったら気軽に質問してください。
- *)
+   *)
+
+Theorem count_add_plus_one: forall n : nat, forall s : bag,
+      count n (add n s) = 1 + count n s.
+Proof.
+  intros n s.
+  simpl.
+  rewrite <- beq_nat_refl.
+  reflexivity.
+Qed.
+
+Theorem count_add_id: forall n m : nat, forall s : bag,
+      beq_nat m n = false -> count n (add m s) = count n s.
+Proof.
+  intros n m s.
+  intros H.
+  simpl.
+  rewrite H.
+  reflexivity.
+Qed.
+
+
+(** [] *)
 
 (** FILL IN HERE *)
 (** [] *)
