@@ -1022,19 +1022,61 @@ Proof.
 Theorem app_nil_end : forall l : natlist,
   l ++ [] = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros natlist.
+  induction natlist.
+  reflexivity.
+  simpl.
+  rewrite IHnatlist.
+  reflexivity.
+Qed.
 
+Theorem rev_snoc : forall n : nat, forall l : natlist,
+  rev (snoc l n) = n :: rev l.
+Proof.
+  intros n l.
+  induction l.
+  reflexivity.
+  simpl.
+  rewrite IHl.
+  reflexivity.
+Qed.
 
 Theorem rev_involutive : forall l : natlist,
   rev (rev l) = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l.
+  induction l.
+  reflexivity.
+  simpl.
+  rewrite rev_snoc.
+  rewrite IHl.
+  reflexivity.
+Qed.
 
+Theorem snoc_app : forall n : nat, forall l1 l2 :natlist,
+  snoc (l1 ++ l2) n = l1 ++ snoc l2 n.
+Proof.
+  intros n l1 l2.
+  induction l1.
+  reflexivity.
+  simpl.
+  rewrite IHl1.
+  reflexivity.
+Qed.
 
 Theorem distr_rev : forall l1 l2 : natlist,
   rev (l1 ++ l2) = (rev l2) ++ (rev l1).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2.
+  induction l1.
+  simpl.
+  rewrite app_nil_end.
+  reflexivity.
+  simpl.
+  rewrite IHl1.
+  rewrite snoc_app.
+  reflexivity.
+Qed.
 
 (* There is a short solution to the next exercise.  If you find
     yourself getting tangled up, step back and try to look for a
@@ -1046,12 +1088,30 @@ Proof.
 Theorem app_ass4 : forall l1 l2 l3 l4 : natlist,
   l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2 l3 l4.
+  replace ((l1 ++ l2) ++ l3) with (l1 ++ (l2 ++ l3)).
+  rewrite app_ass.
+  replace ((l2 ++ l3) ++ l4) with (l2 ++ (l3 ++ l4)).
+  reflexivity.
+  rewrite app_ass.
+  reflexivity.
+  rewrite app_ass.
+  reflexivity.
+Qed.
+  
 
 Theorem snoc_append : forall (l:natlist) (n:nat),
   snoc l n = l ++ [n].
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l n.
+  replace (l ++ [n]) with (rev (rev (l ++ [n]))).
+  rewrite distr_rev.
+  simpl.
+  rewrite rev_involutive.
+  reflexivity.
+  rewrite rev_involutive.
+  reflexivity.
+Qed.
 
 (* An exercise about your implementation of [nonzeros]: *)
 (** 前に書いた [nonzeros] 関数に関する練習問題です。 *)
@@ -1059,7 +1119,16 @@ Proof.
 Lemma nonzeros_length : forall l1 l2 : natlist,
   nonzeros (l1 ++ l2) = (nonzeros l1) ++ (nonzeros l2).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2.
+  induction l1.
+  reflexivity.
+  destruct n.
+  simpl.
+  apply IHl1.
+  simpl.
+  rewrite IHl1.
+  reflexivity.
+Qed.
 (** [] *)
 
 
