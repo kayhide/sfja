@@ -1210,15 +1210,29 @@ Qed.
 
 (* **** Exercise: 3 stars, optional (bag_count_sum) *)
 (* Write down an interesting theorem about bags involving the
-    functions [count] and [sum], and prove it.
+    functions [count] and [sum], and prove it. *)
 (** **** 練習問題: ★★★, optional (bag_count_sum) *)
 (**
    バッグについて [count] と [sum] を使った定理を考え、それを証明しなさい。
    *)
 
-(* FILL IN HERE *)
-[]
- *)
+Theorem bag_count_sum : forall n : nat, forall s1 s2 : bag,
+  count n (sum s1 s2) = count n s1 + count n s2.
+Proof.
+  intros n s1 s2.
+  replace (sum s1 s2) with (s1 ++ s2).
+  induction s1.
+  reflexivity.
+
+  simpl.
+  rewrite IHs1.
+  destruct (beq_nat n0 n).
+  reflexivity.
+  reflexivity.
+  reflexivity.
+Qed.
+
+(** [] *)
 
 (* **** Exercise: 4 stars, optional (rev_injective) *)
 (* Prove that the [rev] function is injective, that is,
