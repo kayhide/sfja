@@ -1662,7 +1662,22 @@ Theorem beq_nat_sym : forall (n m : nat),
   beq_nat n m = beq_nat m n.
 Proof.
   intros n. induction n as [| n'].
-  (* FILL IN HERE *) Admitted.
+
+  intros m. destruct m.
+  reflexivity.
+
+  rewrite zero_nbeq_S.
+  rewrite S_nbeq_0.
+  reflexivity.
+
+  intros m. destruct m.
+  rewrite zero_nbeq_S.
+  rewrite S_nbeq_0.
+  reflexivity.
+
+  simpl.
+  apply IHn'.
+Qed.
 (** [] *)
 
 (* **** Exercise: 3 stars, recommended (beq_nat_sym_informal) *)
