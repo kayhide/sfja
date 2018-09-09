@@ -1253,7 +1253,18 @@ There is a hard way and an easy way to solve this exercise.
 この練習問題には簡単な解法と難しい解法があります。
 *)
 
-(* FILL IN HERE *)
+Theorem rev_injective : forall n : nat, forall l1 l2 : natlist,
+  rev l1 = rev l2 -> l1 = l2.
+Proof.
+  intros n l1 l2 H.
+  replace l1 with (rev (rev l1)).
+  rewrite H.
+  rewrite rev_involutive.
+  reflexivity.
+  rewrite rev_involutive.
+  reflexivity.
+Qed.
+
 (** [] *)
 
 
