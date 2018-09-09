@@ -1561,7 +1561,11 @@ Proof.
      your friend. *)
   (* ヒント: コンテスキト中の補題以外にも、以前に定義した補題を [apply] することができます。こんなときには [SearchAbout] を使うのでしたね。
      *)
-  (* FILL IN HERE *) Admitted.
+  intros l l' eq1.
+  symmetry.
+  rewrite eq1.
+  apply rev_involutive.
+Qed.
 (** [] *)
 
 
