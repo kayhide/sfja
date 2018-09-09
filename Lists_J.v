@@ -1149,7 +1149,16 @@ Qed.
      - それを証明しなさい。
 *)
 
-(* FILL IN HERE *)
+Theorem snoc_append_cons : forall n : nat, forall l : natlist,
+  snoc l n ++ l = l ++ n :: l.
+Proof.
+  intros n l.
+  rewrite snoc_append.
+  rewrite app_ass.
+  simpl.
+  reflexivity.
+Qed.
+
 (** [] *)
 
 (* **** Exercise: 2 stars, optional (bag_proofs) *)
