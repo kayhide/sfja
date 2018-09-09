@@ -1510,7 +1510,11 @@ Theorem silly_ex :
      evenb 3 = true ->
      oddb 4 = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros eq1 eq2.
+  apply eq1.
+  apply eq2.
+Qed.
+
 (** [] *)
 
 (* To use the [apply] tactic, the (conclusion of the) fact
