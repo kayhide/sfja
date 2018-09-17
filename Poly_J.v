@@ -643,8 +643,24 @@ Definition option_map {X Y : Type} (f : X -> Y) (xo : option X)
   end.
 
 (** **** 練習問題: ★★, optional (implicit_args) *)
-(** [filter]や[map]関数を定義したり使ったりするケースでは、多くの場合暗黙的な型引数が使われます。暗黙の型引数定義に使われている中括弧を普通の括弧に置き換え、必要なところに型引数を明示的に書くようにして、それが正しいかどうかをCoqでチェックしなさい。 [] *)
+(** [filter]や[map]関数を定義したり使ったりするケースでは、多くの場合暗黙的な型引数が使われます。暗黙の型引数定義に使われている中括弧を普通の括弧に置き換え、必要なところに型引数を明示的に書くようにして、それが正しいかどうかをCoqでチェックしなさい。 *)
 
+Fixpoint filter' (X:Type) (test: X->bool) (l:list X) : (list X) :=
+  match l with
+  | []     => []
+  | h :: t => if test h
+              then h :: (filter' X test t)
+              else       filter' X test t
+  end.
+
+Fixpoint map' (X Y:Type) (f:X->Y) (l:list X)
+             : (list Y) :=
+  match l with
+  | []     => []
+  | h :: t => (f h) :: (map' X Y f t)
+  end.
+
+(** [] *)
 
 (** ** 畳み込み（Fold）関数 *)
 
