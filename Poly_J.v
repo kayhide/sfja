@@ -263,7 +263,7 @@ Qed.
 Inductive prod (X Y : Type) : Type :=
   pair : X -> Y -> prod X Y.
 
-Implicit Arguments pair [[X] [Y]].
+Arguments pair [_ _].
 
 (** リストと同様、型引数を暗黙にし、その表記法を定義します。 *)
 
@@ -319,14 +319,15 @@ Fixpoint combine' {X Y : Type} (lx : list X) (ly : list Y)
 (** **** 練習問題: ★★, recommended (split) *)
 (** [split]関数は[combine]と全く逆で、ペアのリストを引数に受け取り、リストのペアを返します。多くの関数型言語とで[unzip]と呼ばれているものです。次の段落のコメントをはずし、[split]関数の定義を完成させなさい。続くテストを通過することも確認しなさい。 *)
 
-(*
-Fixpoint split
-  (* FILL IN HERE *)
+Fixpoint split {X Y : Type} (lxy : list (X * Y)) : (list X * list Y) :=
+  match lxy with
+  | [] => ([], [])
+  | (x, y) :: lxy' => (x :: fst (split lxy'), y :: snd (split lxy'))
+  end.
 
 Example test_split:
   split [(1,false),(2,false)] = ([1,2],[false,false]).
 Proof. reflexivity.  Qed.
-*)
 (** [] *)
 
 
