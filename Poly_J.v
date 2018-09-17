@@ -339,8 +339,8 @@ Inductive option (X:Type) : Type :=
   | Some : X -> option X
   | None : option X.
 
-Implicit Arguments Some [[X]].
-Implicit Arguments None [[X]].
+Arguments Some [_].
+Arguments None [_].
 
 (** また、[index]関数も、色々な型のリストで使えるように定義し直しましょう。 *)
 
@@ -362,16 +362,19 @@ Proof. reflexivity.  Qed.
 (** 前の章に出てきた[hd_opt]関数の多相版を定義しなさい。。次の単体テストでの確認も忘れずに。 *)
 
 Definition hd_opt {X : Type} (l : list X)  : option X :=
-  (* FILL IN HERE *) admit.
+  match l with
+    | [] => None
+    | h :: t => Some h
+  end.
 
 (** 再び、暗黙的に定義された引数を明示的に指定してみましょう。関数名の前に[@]をつければいいのでしたね。 *)
 
 Check @hd_opt.
 
 Example test_hd_opt1 :  hd_opt [1,2] = Some 1.
- (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 Example test_hd_opt2 :   hd_opt  [[1],[2]]  = Some [1].
- (* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 (** [] *)
 
 
