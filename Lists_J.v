@@ -1387,7 +1387,6 @@ Proof.
   destruct l.
   reflexivity.
   
-  simpl.
   reflexivity.
 Qed.
 (** [] *)
@@ -1419,10 +1418,10 @@ Proof.
   intros l.
   induction l.
   reflexivity.
+
   simpl.
-  rewrite <- IHl.
   rewrite <- beq_nat_refl.
-  reflexivity.
+  apply IHl.
 Qed.
 (** [] *)
 
@@ -1510,7 +1509,6 @@ Proof.
   apply eq1.
   apply eq2.
 Qed.
-
 (** [] *)
 
 (* To use the [apply] tactic, the (conclusion of the) fact
@@ -1557,9 +1555,9 @@ Proof.
      your friend. *)
   (* ヒント: コンテスキト中の補題以外にも、以前に定義した補題を [apply] することができます。こんなときには [SearchAbout] を使うのでしたね。
      *)
-  intros l l' eq1.
+  intros l l' H.
+  rewrite H.
   symmetry.
-  rewrite eq1.
   apply rev_involutive.
 Qed.
 (** [] *)
@@ -1639,12 +1637,11 @@ Proof.
   intros l1. induction l1 as [ | n l1'].
   reflexivity.
 
-  simpl.
   intros l2 l3.
+  simpl.
   rewrite IHl1'.
   reflexivity.
 Qed.
-
 (** [] *)
 
 (* **** Exercise: 3 stars (apply_exercise2) *)
@@ -1658,20 +1655,12 @@ Theorem beq_nat_sym : forall (n m : nat),
   beq_nat n m = beq_nat m n.
 Proof.
   intros n. induction n as [| n'].
-
-  intros m. destruct m.
+  destruct m.
+  reflexivity.
   reflexivity.
 
-  rewrite zero_nbeq_S.
-  rewrite S_nbeq_0.
+  destruct m.
   reflexivity.
-
-  intros m. destruct m.
-  rewrite zero_nbeq_S.
-  rewrite S_nbeq_0.
-  reflexivity.
-
-  simpl.
   apply IHn'.
 Qed.
 (** [] *)
