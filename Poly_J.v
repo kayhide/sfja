@@ -1045,8 +1045,28 @@ Theorem plus_n_n_injective : forall n m,
      n = m.
 Proof.
   intros n. induction n as [| n'].
-    (* ヒント: 補題plus_n_Smを使用します *)
-    (* FILL IN HERE *) Admitted.
+
+  destruct m.
+  reflexivity.
+
+  intros H.
+  simpl in H. 
+  inversion H.
+
+  destruct m.
+  intros H.
+  simpl in H. 
+  inversion H.
+
+  intros H.
+  simpl in H. 
+  rewrite <- plus_n_Sm in H.
+  rewrite <- plus_n_Sm in H.
+  inversion H.
+  apply eq_remove_S.
+  apply IHn'.
+  apply H1.
+Qed.
 (** [] *)
 
 
