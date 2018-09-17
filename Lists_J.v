@@ -1149,16 +1149,16 @@ Qed.
      - それを証明しなさい。
 *)
 
-Theorem snoc_append_cons : forall n : nat, forall l : natlist,
-  snoc l n ++ l = l ++ n :: l.
+Theorem cons_append : forall n : nat, forall s1 s2 : bag,
+      snoc s1 n ++ s2 = s1 ++ n :: s2.
 Proof.
-  intros n l.
-  rewrite snoc_append.
-  rewrite app_ass.
+  intros n s1 s2.
+  induction s1.
+  reflexivity.
   simpl.
+  rewrite IHs1.
   reflexivity.
 Qed.
-
 (** [] *)
 
 (* **** Exercise: 2 stars, optional (bag_proofs) *)
@@ -1202,36 +1202,32 @@ Proof.
   reflexivity.
 
   simpl.
-  rewrite IHs.
-  reflexivity.
+  apply IHs.
 Qed.
-
 (** [] *)
 
 (* **** Exercise: 3 stars, optional (bag_count_sum) *)
 (* Write down an interesting theorem about bags involving the
-    functions [count] and [sum], and prove it. *)
+    functions [count] and [sum], and prove it.
+ *)
 (** **** 練習問題: ★★★, optional (bag_count_sum) *)
 (**
    バッグについて [count] と [sum] を使った定理を考え、それを証明しなさい。
-   *)
-
+ *)
 Theorem bag_count_sum : forall n : nat, forall s1 s2 : bag,
-  count n (sum s1 s2) = count n s1 + count n s2.
+  count n s1 + count n s2 = count n (sum s1 s2).
 Proof.
   intros n s1 s2.
-  replace (sum s1 s2) with (s1 ++ s2).
   induction s1.
   reflexivity.
 
   simpl.
-  rewrite IHs1.
   destruct (beq_nat n0 n).
+  rewrite <- IHs1.
   reflexivity.
-  reflexivity.
-  reflexivity.
-Qed.
 
+  apply IHs1.
+Qed.
 (** [] *)
 
 (* **** Exercise: 4 stars, optional (rev_injective) *)
@@ -1253,18 +1249,18 @@ There is a hard way and an easy way to solve this exercise.
 この練習問題には簡単な解法と難しい解法があります。
 *)
 
-Theorem rev_injective : forall n : nat, forall l1 l2 : natlist,
+Theorem rev_injective : forall l1 l2 : natlist,
   rev l1 = rev l2 -> l1 = l2.
 Proof.
-  intros n l1 l2 H.
+  intros l1 l2 H.
   replace l1 with (rev (rev l1)).
   rewrite H.
   rewrite rev_involutive.
   reflexivity.
+
   rewrite rev_involutive.
   reflexivity.
 Qed.
-
 (** [] *)
 
 
