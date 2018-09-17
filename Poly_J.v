@@ -586,10 +586,30 @@ Proof. reflexivity.  Qed.
 (** **** 練習問題: ★★★, optional (map_rev) *)
 (** [map]と[rev]が可換であることを示しなさい。証明には補題をたてて証明する必要があるでしょう。 *)
 
+Lemma map_snoc : forall (X Y : Type) (f : X -> Y) (l : list X) (x : X),
+  map f (snoc l x) = snoc (map f l) (f x).
+Proof.
+  intros X Y f l x.
+  induction l.
+  reflexivity.
+
+  simpl.
+  rewrite IHl.
+  reflexivity.
+Qed.
+
 Theorem map_rev : forall (X Y : Type) (f : X -> Y) (l : list X),
   map f (rev l) = rev (map f l).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X Y f l.
+  induction l.
+  reflexivity.
+
+  simpl.
+  rewrite map_snoc.
+  rewrite IHl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★, recommended (flat_map) *)
