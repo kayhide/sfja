@@ -692,7 +692,7 @@ Proof. reflexivity. Qed.
 Example fold_example2 : fold andb [true,true,false,true] true = false.
 Proof. reflexivity. Qed.
 
-Example fold_example3 : fold app  [[1],[],[2,3],[4]] [] = [1,2,3,4].
+Example fold_example3 : fold (@app nat) [[1],[],[2,3],[4]] [] = [1,2,3,4].
 Proof. reflexivity. Qed.
 
 (** **** 練習問題: ★, optional (fold_types_different) *)
