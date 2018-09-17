@@ -972,12 +972,24 @@ Proof.
 Theorem beq_nat_0_l : forall n,
   true = beq_nat 0 n -> 0 = n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  destruct n.
+  reflexivity.
+
+  intros contra.
+  inversion contra.
+Qed.
 
 Theorem beq_nat_0_r : forall n,
   true = beq_nat n 0 -> 0 = n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  destruct n.
+  reflexivity.
+
+  intros contra.
+  inversion contra.
+Qed.
 (** [] *)
 
 
