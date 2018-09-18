@@ -1108,14 +1108,30 @@ Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★, recommended (combine_split) *)
-(*
+
 Theorem combine_split : forall X Y (l : list (X * Y)) l1 l2,
   split l = (l1, l2) ->
   combine l1 l2 = l.
 Proof.
   intros X Y l. induction l as [| [x y] l'].
-  (* FILL IN HERE *) Admitted.
-*)
+
+  intros l1 l2 H.
+  simpl in H.
+  inversion H.
+  reflexivity.
+
+  intros l1 l2 H.
+  replace l' with (combine (fst (split l')) (snd (split l'))).
+  inversion H.
+  simpl.
+  reflexivity.
+  
+  apply IHl'.
+
+  destruct (split l').
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★, optional (split_combine) *)
