@@ -1141,7 +1141,33 @@ Qed.
 
     この定理をCoqで証明しなさい（なるべく[intros]を使うタイミングを遅らせ、帰納法の仮定を一般化させておくといいでしょう。 *)
 
-(* FILL IN HERE *)
+Theorem split_combine : forall X Y : Type, forall l1 : list X, forall l2 : list Y,
+    length l1 = length l2
+    -> split (combine l1 l2) = (l1, l2).
+Proof.
+  intros X Y.
+  induction l1 as [| x l1'].
+
+  destruct l2 as [| y l2'].
+  simpl.
+  reflexivity.
+  
+  intros contra.
+  inversion contra.
+
+  destruct l2 as [| y l2'].
+  intros contra.
+  inversion contra.
+
+  intros H.
+  inversion H.
+
+  apply IHl1' in H1.
+
+  simpl.
+  rewrite H1.
+  reflexivity.
+Qed.
 (** [] *)
 
 
