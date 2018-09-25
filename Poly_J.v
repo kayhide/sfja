@@ -1247,7 +1247,25 @@ Theorem filter_exercise : forall (X : Type) (test : X -> bool)
      filter test l = x :: lf ->
      test x = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X test x.
+  induction l.
+
+  intros lf contra.
+  inversion contra.
+
+  intros lf H.
+  simpl in H.
+  remember (test x0).
+
+  destruct b.
+  inversion H.
+  rewrite Heqb.
+  rewrite H1.
+  reflexivity.
+
+  apply IHl in H.
+  apply H.
+Qed.
 (** [] *)
 
 
