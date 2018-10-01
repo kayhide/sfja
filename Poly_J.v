@@ -1418,7 +1418,17 @@ Proof. reflexivity. Qed.
 
 Theorem fold_length_correct : forall X (l : list X),
   fold_length l = length l.
-(* FILL IN HERE *) Admitted.
+Proof.
+  intros X l.
+  induction l.
+  reflexivity.
+
+  unfold fold_length.
+  simpl.
+  unfold fold_length in IHl.
+  rewrite IHl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★, recommended (fold_map) *)
