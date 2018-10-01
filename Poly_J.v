@@ -1517,7 +1517,82 @@ End MumbleBaz.
     そして、[existsb']と[existsb]が同じ振る舞いをすることを証明しなさい。
 *)
 
-(* FILL IN HERE *)
+Definition forallb {X : Type} (f : (X -> bool)) (l : list X) : bool :=
+  fold (fun x acc => andb acc (f x)) l true.
+
+Example test_forallb1 : forallb oddb [1,3,5,7,9] = true.
+Proof. reflexivity. Qed.
+Example test_forallb2 : forallb negb [false,false] = true.
+Proof. reflexivity. Qed.
+Example test_forallb3 : forallb evenb [0,2,4,5] = false.
+Proof. reflexivity. Qed.
+Example test_forallb4 : forallb (beq_nat 5) [] = true.
+Proof. reflexivity. Qed.
+
+
+Definition existsb {X : Type} (f : (X -> bool)) (l : list X) : bool :=
+  fold (fun x acc => orb acc (f x)) l false.
+
+Example test_existsb1 : existsb (beq_nat 5) [0,2,3,6] = false.
+Proof. reflexivity. Qed.
+Example test_existsb2 : existsb (andb true) [true,true,false] = true.
+Proof. reflexivity. Qed.
+Example test_existsb3 : existsb oddb [1,0,0,0,0,3] = true.
+Proof. reflexivity. Qed.
+Example test_existsb4 : existsb evenb [] = false.
+Proof. reflexivity. Qed.
+
+Definition compose {X Y Z : Type} (f : X -> Y) (g : Y -> Z) : (X -> Z) :=
+  fun x => g (f x).
+
+Definition existsb' {X : Type} (f : (X -> bool)) (l : list X) : bool :=
+  negb (forallb (compose f negb) l).
+
+Example test_existsb'1 : existsb' (beq_nat 5) [0,2,3,6] = false.
+Proof. reflexivity. Qed.
+Example test_existsb'2 : existsb' (andb true) [true,true,false] = true.
+Proof. reflexivity. Qed.
+Example test_existsb'3 : existsb' oddb [1,0,0,0,0,3] = true.
+Proof. reflexivity. Qed.
+Example test_existsb'4 : existsb' evenb [] = false.
+Proof. reflexivity. Qed.
+
+Lemma fold_head : forall X Y : Type, forall f : X -> Y -> Y, forall x : X, forall y : Y, forall l : list X,
+  fold f (x :: l) y = f x (fold f l y).
+Proof.
+  intros X Y f x y l.
+  reflexivity.
+Qed.
+
+Lemma negb_andb_orb_negb : forall x y : bool,
+  negb (andb x y) = orb (negb x) (negb y).
+Proof.
+  intros x y.
+  destruct x.
+  reflexivity.
+  reflexivity.
+Qed.
+
+Theorem existsb'_correct : forall X : Type, forall (f : X -> bool), forall l : list X,
+  existsb' f l = existsb f l.
+Proof.
+  intros X f l.
+  induction l.
+  reflexivity.
+
+  unfold existsb.
+  unfold existsb'.
+  simpl.
+  unfold existsb in IHl.
+  unfold existsb' in IHl.
+  rewrite <- IHl.
+  unfold forallb.
+  rewrite fold_head.
+  rewrite negb_andb_orb_negb.
+  unfold compose.
+  rewrite negb_involutive.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★, optional (index_informal) *)
