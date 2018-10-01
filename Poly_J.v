@@ -1435,11 +1435,24 @@ Qed.
 (** [map]関数も[fold]を使って書くことができます。以下の[fold_map]を完成させなさい。 *)
 
 Definition fold_map {X Y:Type} (f : X -> Y) (l : list X) : list Y :=
-(* FILL IN HERE *) admit.
+  fold (fun x acc => (f x) :: acc ) l [].
 
 (** [fold_map]の正しさを示す定理をCoqで書き、証明しなさい *)
 
-(* FILL IN HERE *)
+Theorem fold_map_correct : forall X Y: Type, forall (f : X -> Y) (l : list X),
+  fold_map f l = map f l.
+Proof.
+  intros X Y f l.
+  induction l.
+  reflexivity.
+
+  simpl.
+  unfold fold_map.
+  simpl.
+  unfold fold_map in IHl.
+  rewrite IHl.
+  reflexivity.
+Qed.
 (** [] *)
 
 Module MumbleBaz.
