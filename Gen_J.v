@@ -303,7 +303,26 @@ Theorem app_length_cons : forall (X : Type) (l1 l2 : list X)
      length (l1 ++ (x :: l2)) = n ->
      S (length (l1 ++ l2)) = n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X l1 l2 x.
+
+  induction l1.
+  intros n H.
+  simpl in H.
+  simpl.
+  apply H.
+
+  destruct n.
+  intros contra.
+  inversion contra.
+
+  simpl.
+  intros H.
+  inversion H.
+  apply IHl1 in H1.
+  rewrite H1.
+  rewrite H.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★★, optional (app_length_twice) *)
