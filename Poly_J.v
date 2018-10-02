@@ -1320,11 +1320,20 @@ Theorem beq_nat_trans : forall n m p,
   true = beq_nat n p.
 Proof.
   intros n m p eq1 eq2.
-  apply beq_nat_eq in eq1.
   apply beq_nat_eq in eq2.
   rewrite eq2 in eq1.
-  rewrite eq1.
-  apply beq_nat_refl.
+  apply eq1.
+Qed.
+
+Theorem nbeq_nat_trans : forall n m p,
+  false = beq_nat n m ->
+  true = beq_nat m p ->
+  false = beq_nat n p.
+Proof.
+  intros n m p eq1 eq2.
+  apply beq_nat_eq in eq2.
+  rewrite eq2 in eq1.
+  apply eq1.
 Qed.
 
 Theorem override_permute : forall {X:Type} x1 x2 k1 k2 k3 (f : nat->X),
@@ -1334,12 +1343,12 @@ Proof.
   intros X x1 x2 k1 k2 k3 f H.
   unfold override.
   remember (beq_nat k1 k3) as b1.
-  remember (beq_nat k2 k3) as b2.
   destruct b1.
-  apply beq_nat_eq in Heqb1.
-  rewrite <- Heqb1 in Heqb2.
-  rewrite <- H in Heqb2.
-  rewrite Heqb2.
+  assert (false = beq_nat k2 k3) as H'.
+  apply nbeq_nat_trans with k1.
+  apply H.
+  apply Heqb1.
+  rewrite <- H'.
   reflexivity.
   reflexivity.
 Qed.
