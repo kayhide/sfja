@@ -328,9 +328,63 @@ Qed.
 (** **** 練習問題: ★★★★, optional (app_length_twice) *)
 (** [app_length]を使わずに[l]に関する帰納法で示しなさい。 *)
 
+Theorem app_length_Sn : forall (X : Type) (x : X) (n : nat) (l1 l2 : list X),
+    length (l1 ++ l2) = n ->
+    length (l1 ++ x :: l2) = S n.
+Proof.
+  intros X x n l1.
+  generalize dependent n.
+
+  induction l1.
+  intros n l2 H.
+  simpl in H.
+  simpl.
+  rewrite H.
+  reflexivity.
+
+  intros n l2.
+  destruct n.
+  intros contra.
+  inversion contra.
+
+  simpl.
+  intros H.
+  inversion H.
+  apply IHl1 in H1.
+  rewrite H1.
+  rewrite H.
+  reflexivity.
+Qed.
+
 Theorem app_length_twice : forall (X:Type) (n:nat) (l:list X),
      length l = n ->
      length (l ++ l) = n + n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X n l.
+  generalize dependent n.
+  
+  induction l.
+  intros n H.
+  simpl in H.
+  simpl.
+  rewrite <- H.
+  reflexivity.
+
+  destruct n.
+  intros contra.
+  inversion contra.
+
+  intros H.
+  simpl in H.
+  inversion H.
+  rewrite H1.
+  apply IHl in H1.
+  simpl.
+  assert (length (l ++ x :: l) = S (n + n)) as H'.
+  apply app_length_Sn.
+  apply H1.
+  rewrite H'.
+  rewrite plus_n_Sm.
+  reflexivity.
+Qed.
 (** [] *)
