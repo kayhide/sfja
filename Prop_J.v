@@ -931,6 +931,12 @@ Check tree_ind.
             forall m : mytype X, P m
 ]]
 *)
+Inductive mytype (X : Type) :=
+  | constr1 : X -> mytype X
+  | constr2 : nat -> mytype X
+  | constr3 : mytype X -> nat -> mytype X
+.
+Check mytype_ind.
 (** [] *)
 
 (* **** Exercise: 1 star, optional (foo) *)
