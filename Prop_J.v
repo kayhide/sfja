@@ -964,6 +964,12 @@ Check mytype_ind.
              forall f2 : foo X Y, P f2
 ]]
 *)
+Inductive foo (X Y : Type) :=
+  | bar : X -> foo X Y
+  | baz : Y -> foo X Y
+  | quux : (nat -> foo X Y) -> foo X Y
+.
+Check foo_ind.
 (** [] *)
 
 (* **** Exercise: 1 star, optional (foo') *)
