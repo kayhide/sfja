@@ -1190,7 +1190,13 @@ Print ev_plus4'.
 Theorem double_even : forall n,
   ev (double n).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction n.
+  simpl.
+  apply ev_0.
+  simpl.
+  apply ev_SS.
+  apply IHn.
+Qed.
 (** [] *)
 
 (* **** Exercise: 4 stars, optional (double_even_pfobj) *)
