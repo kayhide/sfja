@@ -1158,11 +1158,28 @@ Definition four_ev : ev 4 :=
     even, then so is [4+n]. *)
 (** [n] が偶数ならば [4+n] も偶数であることをタクティックによる証明と証明オブジェクトによる証明で示しなさい。 *)
 Definition ev_plus4 : forall n, ev n -> ev (4 + n) :=
-  (* FILL IN HERE *) admit.
+  fun (n : nat) (H : ev n) => ev_SS (2 + n) (ev_SS n H).
 Theorem ev_plus4' : forall n,
   ev n -> ev (4 + n).
 Proof.
-  (* FILL IN HERE *) Admitted.
+ intros n H. 
+ apply ev_SS.
+ apply ev_SS.
+ apply H.
+Qed.
+
+Print ev_plus4.
+(* ev_plus4 =  *)
+(* fun (n : nat) (H : ev n) => ev_SS (2 + n) (ev_SS n H) *)
+(*      : forall n : nat, ev n -> ev (4 + n) *)
+
+(* Argument scopes are [nat_scope _] *)
+
+Print ev_plus4'.
+(* ev_plus4' =  *)
+(* fun (n : nat) (H : ev n) => ev_SS (S (S n)) (ev_SS n H) *)
+(*      : forall n : nat, ev n -> ev (4 + n) *)
+(* Argument scopes are [nat_scope _] *)
 (** [] *)
 
 (* **** Exercise: 2 stars (double_even) *)
