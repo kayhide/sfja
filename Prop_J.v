@@ -1208,6 +1208,14 @@ Qed.
 (** 上記のタクティックによる証明でどのような証明オブジェクトが構築されるかを予想しなさい。
     (答を確かめる前に、[Case] を除去しましょう。 これがあると証明オブジェクトが少し見づらくなります。)
 *)
+Print double_even.
+(* double_even =  *)
+(* fun n : nat => *)
+(* nat_ind (fun n0 : nat => ev (double n0)) ev_0 *)
+(*   (fun (n0 : nat) (IHn : ev (double n0)) => ev_SS (double n0) IHn) n *)
+(*      : forall n : nat, ev (double n) *)
+
+(* Argument scope is [nat_scope] *)
 (** [] *)
 
 (* ####################################################### *)
