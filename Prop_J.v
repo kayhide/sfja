@@ -786,6 +786,7 @@ Inductive natlist1 : Type :=
 
 (* Now what will the induction principle look like? *)
 (** このとき、帰納法の原理はどのようになるでしょうか？ *)
+Check natlist1_ind.
 (** [] *)
 
 (* From these examples, we can extract this general rule:
@@ -833,9 +834,10 @@ Inductive natlist1 : Type :=
     [ExSet] の帰納的な定義を示しなさい。 *)
 
 Inductive ExSet : Type :=
-  (* FILL IN HERE *)
+  | con1 : bool -> ExSet
+  | con2 : nat -> ExSet -> ExSet
 .
-
+Check ExSet_ind.
 (** [] *)
 
 (* What about polymorphic datatypes?
