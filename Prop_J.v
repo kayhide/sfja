@@ -690,7 +690,14 @@ Proof.
 Theorem plus_one_r' : forall n:nat,
   n + 1 = S n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  apply nat_ind.
+  reflexivity.
+
+  intros n H.
+  simpl.
+  rewrite H.
+  reflexivity.
+Qed.
 (** [] *)
 
 (* The induction principles that Coq generates for other
