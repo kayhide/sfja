@@ -1143,9 +1143,13 @@ Inductive ev : nat -> Prop :=
 Theorem four_ev' :
   ev 4.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  apply ev_SS.
+  apply ev_SS.
+  apply ev_0.
+Qed.
+
 Definition four_ev : ev 4 :=
-  (* FILL IN HERE *) admit.
+  ev_SS 2 (ev_SS 0 ev_0).
 (** [] *)
 
 (* **** Exercise: 2 stars (ev_plus4) *)
