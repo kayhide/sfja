@@ -2741,7 +2741,19 @@ Theorem ev_MyProp' : forall n:nat,
   MyProp n -> ev n.
 Proof.
   apply MyProp_ind.
-  (* FILL IN HERE *) Admitted.
+  apply ev_SS.
+  apply ev_SS.
+  apply ev_0.
+
+  intros n E1 E2.
+  apply ev_SS.
+  apply ev_SS.
+  apply E2.
+
+  intros n E1 E2.
+  inversion E2.
+  apply H0.
+Qed.
 (** [] *)
 
 (*  **** Exercise: 4 stars, optional (MyProp_pfobj) *)
