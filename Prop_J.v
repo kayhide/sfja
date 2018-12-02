@@ -1280,7 +1280,7 @@ Proof.
 
 (* What happens if we try to [destruct] on [n] instead of [E]? *)
 (** [E] の代わりに [n] に対して [destruct] するとどうなるでしょうか? *)
-Theorem ev_minus2': forall n,
+Theorem ev_minus2_n: forall n,
   ev n -> ev (pred (pred n)).
 Proof.
   intros n E.
