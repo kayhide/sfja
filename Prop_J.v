@@ -2465,7 +2465,52 @@ Proof.
     同じスタイルになるよう書き直しなさい。このことは、それぞれの定理が
     帰納法で証明された命題に明確な定義を与え、この定義された命題から定理と
     証明を示しています。  *)
-(* FILL IN HERE *)
+
+Definition P_plus_assoc (n m p : nat) : Prop :=
+  n + (m + p) = (n + m) + p.
+
+Theorem plus_assoc'' : forall n m p : nat,
+  P_plus_assoc n m p.
+Proof.
+  intros n.
+  apply nat_ind with (n := n).
+  reflexivity.
+
+  intros n0 IH m p.
+  unfold P_plus_assoc.
+  remember (m + p) as mp.
+  simpl.
+  rewrite plus_n_Sm.
+  remember (S mp) as Smp.
+  rewrite <- plus_Sn_m.
+  rewrite plus_n_Sm.
+  rewrite Heqmp in HeqSmp.
+  rewrite <- plus_Sn_m in HeqSmp.
+  rewrite HeqSmp.
+  apply IH with (m := S m).
+Qed.
+
+Definition P_plus_comm (n m : nat) : Prop :=
+  n + m = m + n.
+
+Theorem plus_comm''' : forall n m : nat,
+  P_plus_comm n m.
+Proof.
+  intros n.
+  apply nat_ind with (n := n).
+  unfold P_plus_comm.
+  intros m.
+  rewrite plus_0_r.
+  reflexivity.
+
+  intros n0 IH m.
+  unfold P_plus_comm.
+  rewrite <- plus_n_Sm.
+  rewrite plus_Sn_m.
+  rewrite plus_n_Sm.
+  rewrite <- plus_Sn_m.
+  apply IH with (m := S m).
+Qed.
 (** [] *)
 
 (* ##################################################### *)
