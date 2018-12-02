@@ -1298,7 +1298,11 @@ Proof.
   simpl.
   (** ev (S (S n)) -> ev n *)
   (** 仮定が増えないので証明が進まない。 *)
-  Admitted.
+
+  (** と思われたかもしれないが、 inversion で証明できる。 *)
+  inversion E.
+  apply H0.
+Qed.
 (** [] *)
 
 (* We can also perform _induction_ on evidence that [n] is
