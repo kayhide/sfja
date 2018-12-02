@@ -1556,7 +1556,26 @@ Qed.
 Theorem ev_plus_plus : forall n m p,
   ev (n+m) -> ev (n+p) -> ev (m+p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p E1 E2.
+  apply ev_ev_even with (n := double n).
+  replace (double n + (m + p)) with ((n + m) + (n + p)).
+  apply ev_sum.
+  apply E1.
+  apply E2.
+  remember (n + m) as nm.
+  remember (n + p) as np.
+  rewrite plus_assoc.
+  rewrite (plus_comm (double n) m).
+  rewrite double_plus.
+  rewrite plus_assoc.
+  rewrite (plus_comm m n).
+  rewrite Heqnm.
+  rewrite Heqnp.
+  rewrite plus_assoc.
+  reflexivity.
+
+  apply double_even.
+Qed.
 (** [] *)
 
 (* ##################################################### *)
