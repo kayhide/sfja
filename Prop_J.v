@@ -1483,7 +1483,12 @@ Proof.
 Theorem SSSSev_even : forall n,
   ev (S (S (S (S n)))) -> ev n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n E.
+  inversion E.
+  inversion H0.
+  apply H2.
+Qed.
+(** [] *)
 
 (* The [inversion] tactic can also be used to derive goals by showing
     the absurdity of a hypothesis. *)
@@ -1493,7 +1498,11 @@ Proof.
 Theorem even5_nonsense :
   ev 5 -> 2 + 2 = 9.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros H.
+  inversion H.
+  inversion H1.
+  inversion H3.
+Qed.
 (** [] *)
 
 (* We can generally use [inversion] instead of [destruct] on
