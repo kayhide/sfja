@@ -1324,13 +1324,21 @@ Proof.
 
 (* **** Exercise: 1 star (ev_even_n) *)
 (** **** 練習問題: ★ (ev_even_n) *)
-(** *)
 
-(** この証明を [E] でなく [n] に対する帰納法として実施できますか? *)
 (* Could this proof be carried out by induction on [n] instead
     of [E]? *)
+(** この証明を [E] でなく [n] に対する帰納法として実施できますか? *)
+
+Theorem ev_even' : forall n,
+  ev n -> even n.
+Proof.
+  intros n E.
+  induction n.
+  reflexivity.
+
+  (** ev n -> even n の仮定から even (S n) を導くことができない。 *)
+  Admitted.
 (** [] *)
-(* [] *)
 
 (*  The induction principle for inductively defined propositions does
     not follow quite the same form as that of inductively defined
