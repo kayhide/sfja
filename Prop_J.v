@@ -1692,7 +1692,7 @@ Qed.
 
 (*  With these, we can show that [MyProp] holds of all even numbers,
     and vice versa. *)
-(** これらを使って、 [MyProp] は全ての奇数について成り立つことと、その逆も成り立つをことを示せます。 *)
+(** これらを使って、 [MyProp] は全ての偶数について成り立つことと、その逆も成り立つをことを示せます。 *)
 
 Theorem MyProp_ev : forall n:nat,
   ev n -> MyProp n.
