@@ -1676,11 +1676,18 @@ Proof.
 
 Theorem MyProp_0 : MyProp 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  apply MyProp3.
+  apply MyProp3.
+  apply MyProp1.
+Qed.
 
 Theorem MyProp_plustwo : forall n:nat, MyProp n -> MyProp (S (S n)).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n E.
+  apply MyProp3.
+  apply MyProp2.
+  apply E.
+Qed.
 (** [] *)
 
 (*  With these, we can show that [MyProp] holds of all even numbers,
