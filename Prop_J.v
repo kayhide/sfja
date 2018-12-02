@@ -1746,7 +1746,19 @@ Proof.
 Theorem ev_MyProp : forall n:nat,
   MyProp n -> ev n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n E.
+  induction E.
+  apply ev_SS.
+  apply ev_SS.
+  apply ev_0.
+
+  apply ev_SS.
+  apply ev_SS.
+  apply IHE.
+
+  inversion IHE.
+  apply H0.
+Qed.
 (** [] *)
 
 (* **** Exercise: 3 stars, optional (ev_MyProp_informal) *)
