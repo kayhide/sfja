@@ -1333,7 +1333,7 @@ Proof.
     of [E]? *)
 (** この証明を [E] でなく [n] に対する帰納法として実施できますか? *)
 
-Theorem ev_even' : forall n,
+Theorem ev_even_n : forall n,
   ev n -> even n.
 Proof.
   intros n E.
