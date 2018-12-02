@@ -2536,15 +2536,16 @@ Qed.
     を定義しなさい。
  *)
 
-(*
-Fixpoint true_upto_n__true_everywhere
-(* FILL IN HERE *)
-
+Fixpoint true_upto_n__true_everywhere (n : nat) (P : nat -> Prop) :=
+  match n with
+  | 0 => forall m : nat, P m
+  | S n' => P (S n') -> true_upto_n__true_everywhere n' P
+  end.
+         
 Example true_upto_n_example :
     (true_upto_n__true_everywhere 3 (fun n => even n))
   = (even 3 -> even 2 -> even 1 -> forall m : nat, even m).
 Proof. reflexivity.  Qed.
-*)
 (** [] *)
 
 (* ##################################################### *)
