@@ -1532,7 +1532,15 @@ Proof.
 Theorem ev_ev_even : forall n m,
   ev (n+m) -> ev n -> ev m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m E1 E2.
+  induction E2.
+  apply E1.
+  simpl in E1.
+
+  inversion E1.
+  apply IHE2 in H0.
+  apply H0.
+Qed.
 (** [] *)
 
 (* **** Exercise: 3 stars, optional (ev_plus_plus) *)
