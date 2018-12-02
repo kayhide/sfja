@@ -1280,9 +1280,26 @@ Proof.
 
 (* What happens if we try to [destruct] on [n] instead of [E]? *)
 (** [E] の代わりに [n] に対して [destruct] するとどうなるでしょうか? *)
+Theorem ev_minus2': forall n,
+  ev n -> ev (pred (pred n)).
+Proof.
+  intros n E.
+  destruct n.
+  simpl.
+  apply ev_0.
 
+  simpl.
+  (** ev (S n) -> ev (pred n) *)
+  
+  destruct n.
+  simpl.
+  apply ev_0.
+
+  simpl.
+  (** ev (S (S n)) -> ev n *)
+  (** 仮定が増えないので証明が進まない。 *)
+  Admitted.
 (** [] *)
-(* [] *)
 
 (* We can also perform _induction_ on evidence that [n] is
     even. Here we use it to show that the old [evenb] function
