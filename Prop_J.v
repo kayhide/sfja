@@ -2890,7 +2890,107 @@ End P.
 ]]
 *)
 
-(* FILL IN HERE *)
+Theorem app_ass : forall X (l1 l2 l3 : list X),
+  (l1 ++ l2) ++ l3 = l1 ++ (l2 ++ l3).
+Proof.
+  intros X l1 l2 l3.
+  induction l1.
+  reflexivity.
+
+  simpl.
+  rewrite IHl1.
+  reflexivity.
+Qed.
+
+Theorem snoc_app : forall X (x : X) (l : list X),
+    snoc l x = l ++ [x].
+Proof.
+  intros X x l.
+  induction l.
+  reflexivity.
+
+  simpl.
+  rewrite IHl.
+  reflexivity.
+Qed.
+
+Theorem rev_snoc : forall X (x : X) (l : list X),
+    rev (snoc l x) = x :: rev l.
+Proof.
+  intros X x l.
+  induction l.
+  reflexivity.
+
+  simpl.
+  rewrite IHl.
+  reflexivity.
+Qed.
+
+Theorem rev_rev : forall X (l : list X),
+    rev (rev l) = l.
+Proof.
+  intros X l.
+  induction l.
+  reflexivity.
+
+  simpl.
+  rewrite rev_snoc.
+  rewrite IHl.
+  reflexivity.
+Qed.
+
+
+Inductive pal : forall X, list X -> Prop :=
+   | pal_nil: forall X, pal X nil
+   | pal_single: forall X (x :X), pal X [x]
+   | pal_cons: forall X (l : list X) (x : X), pal X l -> pal X (x :: l ++ [x]).
+
+Theorem pal_append_rev : forall X (l : list X),
+    pal X (l ++ rev l).
+Proof.
+  intros X l.
+  induction l.
+  simpl.
+  apply pal_nil.
+
+  simpl.
+  replace (snoc (rev l) x) with (rev l ++ [x]).
+  remember (l ++ rev l) as l'.
+  replace (x :: l ++ rev l ++ [x]) with (x :: l' ++ [x]).
+  apply pal_cons.
+  apply IHl.
+
+  rewrite Heql'.
+  rewrite app_ass.
+  reflexivity.
+
+  rewrite snoc_app.
+  reflexivity.
+Qed.
+
+Theorem pal_rev_eql : forall X (l : list X),
+    pal X l -> l = rev l.
+Proof.
+  apply pal_ind.
+  reflexivity.
+
+  reflexivity.
+  intros X l x H H0.
+
+  simpl.
+  remember (x :: l ++ [x]) as xlx.
+  rewrite H0.
+  replace (rev (rev l ++ [x])) with (x :: l).
+  simpl.
+  rewrite Heqxlx.
+  rewrite snoc_app.
+  reflexivity.
+
+  rewrite <- snoc_app.
+  rewrite rev_snoc.
+  rewrite rev_rev.
+  reflexivity.
+Qed.
 (** [] *)
 
 (*  **** Exercise: 5 stars, optional (palindrome_converse) *)
