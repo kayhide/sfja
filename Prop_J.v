@@ -2765,7 +2765,52 @@ Qed.
     証明オブジェクトを手作業で構築（上の [ev_plus4] でやったように）することで
     証明しなさい。 *)
 
-(* FILL IN HERE *)
+Print MyProp_ev.
+
+Definition MyProp_ev_pfobj : forall n, ev n -> MyProp n :=
+  ev_ind (fun n => MyProp n) MyProp_0 (fun n (ev_n : ev n) prop_n => MyProp_plustwo n prop_n).
+
+Print ev_MyProp.
+
+Definition ev_MyProp_pfobj : forall n, MyProp n -> ev n :=
+  MyProp_ind
+    (fun n => ev n) (ev_SS 2 (ev_SS 0 ev_0))
+    (fun n prop_n ev_n => ev_SS (2 + n) (ev_SS n ev_n))
+    (fun n (_ : MyProp (2 + n)) (IHE : ev (2 + n)) =>
+       let H : 2 + n = 2 + n -> ev n :=
+           match
+             IHE in (ev n1)
+             return (n1 = 2 + n -> ev n)
+           with
+           | ev_0 =>
+             fun H0 : 0 = 2 + n =>
+               False_ind
+                 (ev n)
+                 (eq_ind
+                    0
+                    (fun e : nat =>
+                       match e with
+                       | 0 => True
+                       | S _ => False
+                       end
+                    ) I (2 + n) H0
+                 )
+           | ev_SS n1 ev_n1 =>
+             fun H0 : S (S n1) = 2 + n =>
+               eq_ind_r
+                 (fun n2 => ev n2 -> ev n)
+                 id
+                 (f_equal
+                    (fun e : nat =>
+                       match e with
+                       | S (S n3) => n3
+                       | _ => n1
+                       end
+                    ) H0
+                 )
+                 ev_n1
+           end
+             in H eq_refl).
 (** [] *)
 
 Module P.
