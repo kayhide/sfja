@@ -3007,6 +3007,14 @@ Qed.
      forall l, l = rev l -> pal l.
 ]]
 *)
+(* TODO *)
+Theorem rev_pal : forall X (l : list X),
+    l = rev l -> pal X l.
+Proof.
+  intros.
+  induction l.
+  apply pal_nil.
+  Admitted.
 
 (* FILL IN HERE *)
 (** [] *)
