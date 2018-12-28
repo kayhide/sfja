@@ -3242,6 +3242,17 @@ End foo_ind_principle.
 ]]
 
 *)
+Module bar_ind_principle.
+
+Inductive bar : Set :=
+  | bar1 : nat -> bar
+  | bar2 : bar -> bar
+  | bar3 : bool -> bar -> bar
+.
+
+Check bar_ind.
+
+End bar_ind_principle.
 (** [] *)
 
 (*  **** Exercise: 2 stars, optional (no_longer_than_ind) *)
