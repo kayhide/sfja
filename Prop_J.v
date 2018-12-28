@@ -3196,12 +3196,14 @@ Qed.
 
 *)
 Module foo_ind_principle.
+
 Inductive foo (X : Set) (Y : Set) : Set :=
 | foo1 : X -> foo X Y
 | foo2 : Y -> foo X Y
 | foo3 : foo X Y -> foo X Y.
 
 Check foo_ind.
+
 End foo_ind_principle.
 (** [] *)
 
@@ -3295,18 +3297,30 @@ End bar_ind_principle.
 [[
   no_longer_than_ind
        : forall (X : Set) (P : list X -> nat -> Prop),
-         (forall n : nat, ____________________) ->
+         (forall n : nat, _ P [] n ___________) ->
          (forall (x : X) (l : list X) (n : nat),
-          no_longer_than X l n -> ____________________ ->
-                                  _____________________________ ->
+          no_longer_than X l n -> _ P l n_____________ ->
+                                  _ P (x :: l) (S n) _________) ->
          (forall (l : list X) (n : nat),
-          no_longer_than X l n -> ____________________ ->
-                                  _____________________________ ->
+          no_longer_than X l n -> _ P l n ____________ ->
+                                  _ P l (S n) ________________) ->
          forall (l : list X) (n : nat), no_longer_than X l n ->
-           ____________________
+           _ P l n ____________
 ]]
 
 *)
+Module no_longer_than_ind.
+  
+Inductive no_longer_than (X : Set) : (list X) -> nat -> Prop :=
+| nlt_nil  : forall n, no_longer_than X [] n
+| nlt_cons : forall x l n, no_longer_than X l n ->
+                       no_longer_than X (x::l) (S n)
+| nlt_succ : forall l n, no_longer_than X l n ->
+                     no_longer_than X l (S n).
+
+Check no_longer_than_ind.
+
+End no_longer_than_ind.
 (** [] *)
 
 (*  **** Exercise: 2 stars, optional (R_provability) *)
