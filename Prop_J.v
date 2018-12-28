@@ -3352,6 +3352,38 @@ End no_longer_than_ind.
     - [R 6 [3,2,1,0]]
 *)
 
+Module R_provability.
+
+Inductive R : nat -> list nat -> Prop :=
+| c1 : R 0 []
+| c2 : forall n l, R n l -> R (S n) (n :: l)
+| c3 : forall n l, R (S n) l -> R n l.
+
+Theorem r_1 : R 2 [1,0].
+Proof.
+  apply c2.
+  apply c2.
+  apply c1.
+Qed.
+
+Theorem r_2 : R 1 [1,2,1,0].
+Proof.
+  apply c3.
+  apply c2.
+  apply c3.
+  apply c3.
+  apply c2.
+  apply c2.
+  apply c2.
+  apply c1.
+Qed.
+
+Theorem r_3 : R 6 [3,2,1,0].
+Proof.
+  Admitted.
+
+
+End R_provability.
 (** [] *)
 
 
