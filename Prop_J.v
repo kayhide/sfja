@@ -3086,7 +3086,73 @@ Proof.
     - （これは少し難しいですので、任意とします）サブシーケンスという関係は推移的である、つまり、 [l1] が [l2] のサブシーケンスであり、 [l2] が [l3] のサブシーケンスであるなら、 [l1] は [l3] のサブシーケンスである、というような関係であることを証明しなさい。（ヒント：何について帰納法を適用するか、よくよく注意して下さい。）
 *)
 
-(* FILL IN HERE *)
+Inductive subseq : list nat -> list nat -> Prop :=
+   | subseq_nil: forall l1, subseq l1 nil
+   | subseq_head: forall (l1 l2 : list nat) (x : nat), subseq l1 l2 -> subseq (x :: l1) (x :: l2)
+   | subseq_cons: forall (l1 l2 : list nat) (x : nat), subseq l1 l2 -> subseq (x :: l1) l2
+.
+
+Check subseq_ind.
+
+Theorem subseq_refl : forall (l : list nat),
+    subseq l l.
+Proof.
+  intros l.
+  induction l.
+  apply subseq_nil.
+
+  apply subseq_head.
+  apply IHl.
+Qed.
+
+
+Theorem subseq_append : forall (l1 l2 l3 : list nat),
+    subseq l2 l1 -> subseq (l2 ++ l3) l1.
+Proof.
+  intros l1 l2 l3 H.
+  induction H.
+
+  apply subseq_nil.
+
+  simpl.
+  apply subseq_head.
+  apply IHsubseq.
+
+  simpl.
+  apply subseq_cons.
+  apply IHsubseq.
+Qed.
+
+Theorem subseq_trans : forall (l1 l2 l3 : list nat),
+    subseq l2 l1 -> subseq l3 l2 -> subseq l3 l1.
+Proof.
+  intros l1 l2 l3 H1 H2.
+
+  generalize dependent H1.
+  generalize dependent l1.
+  induction H2.
+
+  intros l0 H1.
+  inversion H1.
+  apply subseq_nil.
+
+  intros l0 H1.
+  inversion H1.
+  apply subseq_nil.
+
+  apply subseq_head.
+  apply IHsubseq.
+  apply H4.
+
+  apply subseq_cons.
+  apply IHsubseq.
+  apply H4.
+
+  intros l0 H1.
+  apply subseq_cons.
+  apply IHsubseq.
+  apply H1.
+Qed.
 (** [] *)
 
 (*  **** Exercise: 2 stars, optional (foo_ind_principle) *)
