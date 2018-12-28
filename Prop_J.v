@@ -3188,13 +3188,21 @@ Qed.
 [[
    foo_ind
         : forall (X Y : Set) (P : foo X Y -> Prop),
-          (forall x : X, __________________________________) ->
-          (forall y : Y, __________________________________) ->
-          (________________________________________________) ->
-           ________________________________________________
+          (forall x : X, _ P (foo1 x) _____________________) ->
+          (forall y : Y, _ P (foo2 y) _____________________) ->
+          (_ forall f1 : foo X Y, P (foo3 f1) _____________) ->
+           _ forall f2 : foo X Y, P f ______________________
 ]]
 
 *)
+Module foo_ind_principle.
+Inductive foo (X : Set) (Y : Set) : Set :=
+| foo1 : X -> foo X Y
+| foo2 : Y -> foo X Y
+| foo3 : foo X Y -> foo X Y.
+
+Check foo_ind.
+End foo_ind_principle.
 (** [] *)
 
 (** **** 練習問題: ★★, optional (bar_ind_principle) *)
