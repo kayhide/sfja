@@ -2902,18 +2902,6 @@ Proof.
   reflexivity.
 Qed.
 
-Theorem snoc_app : forall X (x : X) (l : list X),
-    snoc l x = l ++ [x].
-Proof.
-  intros X x l.
-  induction l.
-  reflexivity.
-
-  simpl.
-  rewrite IHl.
-  reflexivity.
-Qed.
-
 Theorem rev_snoc : forall X (x : X) (l : list X),
     rev (snoc l x) = x :: rev l.
 Proof.
@@ -2939,11 +2927,22 @@ Proof.
   reflexivity.
 Qed.
 
+Theorem snoc_app : forall X (x : X) (l1 l2 : list X),
+  snoc (l1++ rev l2) x = l1 ++ snoc (rev l2) x.
+Proof.
+  intros X x l1 l2.
+  induction l1.
+  - simpl.
+    reflexivity.
+  - simpl.
+    rewrite IHl1.
+    reflexivity.
+Qed.
 
 Inductive pal : forall X, list X -> Prop :=
    | pal_nil: forall X, pal X nil
    | pal_single: forall X (x :X), pal X [x]
-   | pal_cons: forall X (l : list X) (x : X), pal X l -> pal X (x :: l ++ [x]).
+   | pal_cons: forall X (l : list X) (x : X), pal X l -> pal X (x :: snoc l x).
 
 Theorem pal_append_rev : forall X (l : list X),
     pal X (l ++ rev l).
@@ -2954,16 +2953,12 @@ Proof.
   apply pal_nil.
 
   simpl.
-  replace (snoc (rev l) x) with (rev l ++ [x]).
   remember (l ++ rev l) as l'.
-  replace (x :: l ++ rev l ++ [x]) with (x :: l' ++ [x]).
+  replace (x :: l ++ snoc (rev l) x) with (x :: snoc l' x).
   apply pal_cons.
   apply IHl.
 
   rewrite Heql'.
-  rewrite app_ass.
-  reflexivity.
-
   rewrite snoc_app.
   reflexivity.
 Qed.
@@ -2978,15 +2973,13 @@ Proof.
   intros X l x H H0.
 
   simpl.
-  remember (x :: l ++ [x]) as xlx.
+  remember (x :: snoc l x) as xlx.
   rewrite H0.
-  replace (rev (rev l ++ [x])) with (x :: l).
+  replace (rev (snoc (rev l) x)) with (x :: l).
   simpl.
   rewrite Heqxlx.
-  rewrite snoc_app.
   reflexivity.
 
-  rewrite <- snoc_app.
   rewrite rev_snoc.
   rewrite rev_rev.
   reflexivity.
@@ -3007,13 +3000,187 @@ Qed.
      forall l, l = rev l -> pal l.
 ]]
 *)
+
+Definition tail {X : Type} (l : list X) :=
+  match l with
+  | [] => []
+  | x :: xs => xs
+  end.
+
+Example test_tail_1 : tail ([] : list nat) = [].
+Proof. reflexivity. Qed.
+Example test_tail_2 : tail [1,2,3] = [2,3].
+Proof. reflexivity. Qed.
+
+Definition init {X : Type} (l : list X) : (list X) := rev (tail (rev l)).
+
+Example test_init_1 : init ([] : list nat) = [].
+Proof. reflexivity. Qed.
+Example test_init_2 : init [1,2,3] = [1,2].
+Proof. reflexivity. Qed.
+
+Definition trim {X : Type} (l : list X) : (list X) := (init (tail l)).
+
+Example test_trim_1 : trim ([] : list nat) = [].
+Proof. reflexivity. Qed.
+Example test_trim_2 : trim [1,2] = [].
+Proof. reflexivity. Qed.
+Example test_trim_3 : trim [1,2,3] = [2].
+Proof. reflexivity. Qed.
+
+Lemma rev_nil : forall X (l : list X),
+    rev l = [] -> l = [].
+Proof.
+  intros X l H.
+  destruct l.
+  reflexivity.
+  simpl in H.
+  Admitted.
+
+
+Lemma cons_cons_rev : forall X (x x' : X) (l : list X),
+    x :: x' :: l = rev (x :: x' :: l) -> x :: x' :: l = x :: snoc (trim (x :: x' :: l)) x.
+Proof.
+  intros X x x' l H.
+  induction l.
+  inversion H.
+  unfold trim.
+  reflexivity.
+
+  unfold trim.
+  simpl.
+  unfold init.
+  simpl.
+  remember (rev l) as l'.
+
+  induction l'.
+  symmetry in Heql'.
+  apply rev_nil in Heql'.
+  rewrite Heql'.
+  simpl.
+
+  rewrite Heql' in H.
+  inversion H.
+  reflexivity.
+
+  simpl.
+  rewrite rev_snoc.
+  rewrite rev_snoc.
+  simpl.
+
+  simpl in H.
+  rewrite <- Heql' in H.
+
+  simpl in H.
+
+  inversion H.
+  replace l with (rev (rev l)).
+  rewrite <- Heql'.
+  simpl.
+  reflexivity.
+
+  rewrite rev_rev.
+  reflexivity.
+Qed.
+
+Lemma init_snoc : forall (X : Type) (x : X) (l : list X),
+    init (snoc l x) = l.
+Proof.
+  intros X x l.
+  induction l.
+
+  simpl.
+  unfold init.
+  reflexivity.
+
+  simpl.
+  unfold init.
+  simpl.
+  rewrite rev_snoc.
+  simpl.
+  rewrite rev_snoc.
+  rewrite rev_rev.
+  reflexivity.
+Qed.
+
+Lemma rev_eq_trim: forall (X: Type) (n: nat) (l: list X),
+    length l = S (S n) -> l = rev l -> trim l = rev (trim l).
+Proof.
+  intros X n l H H0.
+  destruct l.
+  inversion H.
+
+  destruct l.
+  inversion H.
+
+  remember (rev (trim (x :: x0 ::l))) as rev'.
+  rewrite  H0.
+  apply cons_cons_rev in H0.
+  rewrite H0.
+  simpl.
+  rewrite rev_snoc.
+  simpl.
+  rewrite <- Heqrev'.
+  unfold trim.
+  simpl.
+  rewrite init_snoc.
+  reflexivity.
+Qed.
+
+
+(* https://stackoverflow.com/a/24365114 *)
+(* by induction on [n], not [l] *)
+
+Lemma rev_eq_pal_length: forall (X: Type) (n: nat) (l: list X),
+    length l <= n -> l = rev l -> pal X l.
+Proof.
+  intros X n.
+  induction n.
+  - intros l H H0.
+    inversion H.
+    induction l.
+    + apply pal_nil.
+    + inversion H.
+
+  - induction n.
+    + intros l H H0.
+      inversion H.
+      induction l.
+      * inversion H2.
+      * inversion H2.
+        induction l.
+        ** apply pal_single.
+        ** simpl in H.
+           remember (S (length l)) as len.
+           inversion H.
+           rewrite H4 in Heqlen.
+           inversion Heqlen.
+           inversion H4.
+      * apply IHn in H2.
+        apply H2.
+        apply H0.
+    + intros l H H0.
+      inversion H.
+
+      Admitted.
+
+
+
 (* TODO *)
 Theorem rev_pal : forall X (l : list X),
     l = rev l -> pal X l.
 Proof.
   intros.
-  induction l.
-  apply pal_nil.
+  destruct l.
+  - apply pal_nil.
+
+  - destruct l.
+    + apply pal_single.
+
+    + apply cons_cons_rev in H.
+      rewrite H.
+      apply pal_cons.
+
   Admitted.
 
 (* FILL IN HERE *)
