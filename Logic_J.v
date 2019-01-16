@@ -204,7 +204,10 @@ Proof.
 Theorem proj2 : forall P Q : Prop,
   P /\ Q -> Q.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros P Q H.
+  inversion H.
+  apply H1.
+Qed.
 (** [] *)
 
 Theorem and_commut : forall P Q : Prop,
@@ -251,7 +254,12 @@ Theorem and_assoc : forall P Q R : Prop,
 Proof.
   intros P Q R H.
   inversion H as [HP [HQ HR]].
-(* FILL IN HERE *) Admitted.
+  split.
+  split.
+  apply HP.
+  apply HQ.
+  apply HR.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★, recommended (even_ev) *)
@@ -275,15 +283,56 @@ Proof.
 Theorem even_ev : forall n : nat,
   (even n -> ev n) /\ (even (S n) -> ev (S n)).
 Proof.
-  (* ヒント: nに帰納法を使います. *)
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  - split.
+    + intros H.
+      apply ev_0.
+    + intros H.
+      inversion H.
+
+  - split.
+    inversion IHn.
+    apply H0.
+
+    inversion IHn.
+    intros H1.
+    apply ev_SS.
+    apply H.
+    unfold even.
+    unfold even in H1.
+    simpl in H1.
+    apply H1.
+Qed.
 (** [] *)
 
 (** **** 練習問題: ★★ *)
 (** 次の命題の証明を示すオブジェクトを作成しなさい。 *)
 
+Theorem conj_fact' : forall P Q R,
+    P /\ Q -> Q /\ R -> P /\ R.
+Proof.
+  intros P Q R H H0.
+  split.
+
+  inversion H.
+  apply H1.
+
+  inversion H0.
+  apply H2.
+Qed.
+
+Print conj_fact'.
+
+
 Definition conj_fact : forall P Q R, P /\ Q -> Q /\ R -> P /\ R :=
-  (* FILL IN HERE *) admit.
+  fun P Q R pq qr => conj P R
+                 (match pq with
+                  | conj _ _ p _ => p
+                  end)
+                 (match qr with
+                  | conj _ _ _ r => r
+                  end).
 (** [] *)
 
 (** ** Iff （両含意）*)
