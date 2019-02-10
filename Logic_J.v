@@ -375,12 +375,31 @@ Proof.
 Theorem iff_refl : forall P : Prop,
   P <-> P.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros P.
+  unfold iff.
+  split.
+  intros H.
+  apply H.
+  intros H.
+  apply H.
+Qed.
 
 Theorem iff_trans : forall P Q R : Prop,
   (P <-> Q) -> (Q <-> R) -> (P <-> R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros P Q R H H0.
+  inversion H.
+  inversion H0.
+  split.
+  - intros H5.
+    apply H1 in H5.
+    apply H3 in H5.
+    apply H5.
+  - intros H5.
+    apply H4 in H5.
+    apply H2 in H5.
+    apply H5.
+Qed.
 
 (*  Hint: If you have an iff hypothesis in the context, you can use
     [inversion] to break it into two separate implications.  (Think
