@@ -426,7 +426,7 @@ Qed.
  *)
 
 Definition MyProp_iff_ev : forall n, MyProp n <-> ev n :=
-  (* FILL IN HERE *) admit.
+  fun (n : nat) => conj (MyProp n -> ev n : Prop) (ev n -> MyProp n : Prop) (ev_MyProp n) (MyProp_ev n).
 (** [] *)
 
 (*  Some of Coq's tactics treat [iff] statements specially, thus
