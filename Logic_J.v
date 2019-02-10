@@ -526,7 +526,7 @@ Proof.
     見てみたりしないこと。）
  *)
 
-(* FILL IN HERE *)
+Print or_commut.
 (** [] *)
 
 Theorem or_distributes_over_and_1 : forall P Q R : Prop,
@@ -545,7 +545,19 @@ Proof.
 Theorem or_distributes_over_and_2 : forall P Q R : Prop,
   (P \/ Q) /\ (P \/ R) -> P \/ (Q /\ R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros P Q R H.
+  inversion H.
+  - inversion H0.
+    + left.
+      apply H2.
+    + inversion H1.
+      * left.
+        apply H3.
+      * right.
+        split.
+        ** apply H2.
+        ** apply H3.
+Qed.
 (** [] *)
 
 (*  **** Exercise: 1 star (or_distributes_over_and) *)
@@ -553,7 +565,7 @@ Proof.
 Theorem or_distributes_over_and : forall P Q R : Prop,
   P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+
 (** [] *)
 
 (* ################################################### *)
